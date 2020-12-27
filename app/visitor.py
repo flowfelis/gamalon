@@ -28,7 +28,8 @@ def add_unique_visitor(visitor_id):
         return unique_visitor_schema.jsonify(visitor), 201
     except IntegrityError:
         db.session.rollback()
-        return jsonify({'IntegrityError': "Make sure 'visit_id and visitor_id fields' are unique in 'unique_visitor table'"}), 500
+        return jsonify(
+            {'IntegrityError': "Make sure 'visit_id and visitor_id fields' are unique in 'unique_visitor table'"}), 500
     except SQLAlchemyError:
         db.session.rollback()
         return jsonify({'UnexpectedError': "Unexpected Error occurred'"})
@@ -145,13 +146,13 @@ def funnel_reporting(date):
     :param date: date in ISO format to filter demo funnelling on a specific date.
     """
     ask_for_demo = db.session.query(func.count(UniqueVisitor.id)).filter(
-        UniqueVisitor.ask_for_demo == True).scalar()
+        UniqueVisitor.ask_for_demo.is_(True), UniqueVisitor.visit_date == date).scalar()
     yes_for_demo = db.session.query(func.count(UniqueVisitor.id)).filter(
-        UniqueVisitor.yes_for_demo == True).scalar()
+        UniqueVisitor.yes_for_demo.is_(True), UniqueVisitor.visit_date == date).scalar()
     start_scheduling = db.session.query(func.count(UniqueVisitor.id)).filter(
-        UniqueVisitor.start_scheduling == True).scalar()
+        UniqueVisitor.start_scheduling.is_(True), UniqueVisitor.visit_date == date).scalar()
     finish_scheduling = db.session.query(func.count(UniqueVisitor.id)).filter(
-        UniqueVisitor.finish_scheduling == True).scalar()
+        UniqueVisitor.finish_scheduling.is_(True), UniqueVisitor.visit_date == date).scalar()
 
     return jsonify({
         'ask_for_demo': ask_for_demo,
