@@ -1,6 +1,7 @@
 from datetime import date
 
 from flask import jsonify
+from sqlalchemy import func
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 
 from app import app, db
@@ -51,6 +52,7 @@ def ask_for_demo(visitor_id):
     """Update a record in DB, that chatbot asked for a demo with the corresponding unique visitor ID
     :param visitor_id: Visitor ID for updating the visitor's "ask_for_demo" boolean.
     """
+
     visitor = UniqueVisitor.query.filter_by(visitor_id=visitor_id).first()
     try:
         visitor.ask_for_demo = True
@@ -71,6 +73,7 @@ def yes_for_demo(visitor_id):
     """Update a record in DB, that visitor answered yes for a demo.
     :param visitor_id: Visitor ID for updating the visitor's "yes_for_demo" boolean.
     """
+
     visitor = UniqueVisitor.query.filter_by(visitor_id=visitor_id).first()
 
     try:
@@ -92,6 +95,7 @@ def start_scheduling(visitor_id):
     """Update a record in DB, that visitor started scheduling a demo.
     :param visitor_id: Visitor ID for updating the visitor's "start_scheduling" boolean.
     """
+
     visitor = UniqueVisitor.query.filter_by(visitor_id=visitor_id).first()
     try:
         visitor.start_scheduling = True
@@ -112,6 +116,7 @@ def finish_scheduling(visitor_id):
     """Update a record in DB, that visitor finished scheduling a demo.
     :param visitor_id: Visitor ID for updating the visitor's "finish_scheduling" boolean.
     """
+
     visitor = UniqueVisitor.query.filter_by(visitor_id=visitor_id).first()
     try:
         visitor.finish_scheduling = True
@@ -125,3 +130,32 @@ def finish_scheduling(visitor_id):
     except SQLAlchemyError:
         db.session.rollback()
         return jsonify({'UnexpectedError': "Unexpected Error occurred'"})
+
+
+@app.route('/funnel_reporting/<string:date>')
+def funnel_reporting(date):
+    """
+
+    Demo funnel- for a specific day, report on four datapoints
+
+    1) How many times did the chat bot ask a visitor if they’d like a demo
+    2) How many times did a visitor say yes, they would like a demo
+    3) How many times did the visitor click a link to start the scheduling process
+    4) How many times did the visitor reach the end of the scheduling process
+    :param date: date in ISO format to filter demo funnelling on a specific date.
+    """
+    ask_for_demo = db.session.query(func.count(UniqueVisitor.id)).filter(
+        UniqueVisitor.ask_for_demo == True).scalar()
+    yes_for_demo = db.session.query(func.count(UniqueVisitor.id)).filter(
+        UniqueVisitor.yes_for_demo == True).scalar()
+    start_scheduling = db.session.query(func.count(UniqueVisitor.id)).filter(
+        UniqueVisitor.start_scheduling == True).scalar()
+    finish_scheduling = db.session.query(func.count(UniqueVisitor.id)).filter(
+        UniqueVisitor.finish_scheduling == True).scalar()
+
+    return jsonify({
+        'ask_for_demo': ask_for_demo,
+        'yes_for_demo': yes_for_demo,
+        'start_scheduling': start_scheduling,
+        'finish_scheduling': finish_scheduling,
+    })
