@@ -1,9 +1,10 @@
 from datetime import date
-from app import db
-from models import UniqueVisitor
-from app import app
-from sqlalchemy.exc import IntegrityError, SQLAlchemyError
+
 from flask import jsonify
+from sqlalchemy.exc import IntegrityError, SQLAlchemyError
+
+from app import app, db
+from models import UniqueVisitor
 from schemas import unique_visitor_schema
 
 
@@ -32,10 +33,12 @@ def add_unique_visitor(visitor_id):
 
 
 @app.route('/unique_visitors/<string:date>')
-def get_all_unique_visitors(date):
+def get_unique_visitors(date):
     """
     GET Daily visitors- how many unique visitors did the site see on a specific day.
+    :param date: filter by date.
     """
-    visitors = UniqueVisitor.query.filter_by(visit_date=date).all()
+    visitor_count = len(UniqueVisitor.query.filter_by(visit_date=date).all())
+    visitors = {'date': date, 'result': visitor_count}
 
-    return unique_visitor_schema.jsonify(visitors, many=True)
+    return jsonify(visitors)
