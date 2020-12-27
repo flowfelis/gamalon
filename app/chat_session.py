@@ -4,7 +4,7 @@ from flask import jsonify
 from sqlalchemy.exc import SQLAlchemyError
 
 from app import app, db
-from models import ChatSession
+from models import ChatSession, UniqueVisitor
 from schemas import chat_session_schema
 
 
@@ -41,3 +41,21 @@ def get_chat_sessions(date):
     chat_sessions = {'date': date, 'result': chat_session_count}
 
     return jsonify(chat_sessions)
+
+
+@app.route('/daily_conversion_rate/<string:date>')
+def daily_conversion_rate(date):
+    """
+    Daily conversion rate- for a specific day, what was the % of visits that resulted in a chat session being started?
+    """
+
+    visitors = len(UniqueVisitor.query.filter_by(visit_date=date).all())
+    chat_sessions = len(
+        ChatSession.query.filter_by(chat_session_date=date).all())
+
+    daily_conversion_rate = int(chat_sessions / (visitors / 100))
+
+    return jsonify({
+        'date': date,
+        'result': f'%{daily_conversion_rate}'
+    })
