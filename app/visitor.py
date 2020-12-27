@@ -48,7 +48,7 @@ def get_unique_visitors(date):
     return jsonify(visitors)
 
 
-@app.route('/ask_for_demo/<int:visitor_id>', methods=['POST'])
+@app.route('/ask_for_demo/<int:visitor_id>', methods=['PUT'])
 def ask_for_demo(visitor_id):
     """Update a record in DB, that chatbot asked for a demo with the corresponding unique visitor ID
     :param visitor_id: Visitor ID for updating the visitor's "ask_for_demo" boolean.
@@ -69,7 +69,7 @@ def ask_for_demo(visitor_id):
         return jsonify({'UnexpectedError': "Unexpected Error occurred'"})
 
 
-@app.route('/yes_for_demo/<int:visitor_id>', methods=['POST'])
+@app.route('/yes_for_demo/<int:visitor_id>', methods=['PUT'])
 def yes_for_demo(visitor_id):
     """Update a record in DB, that visitor answered yes for a demo.
     :param visitor_id: Visitor ID for updating the visitor's "yes_for_demo" boolean.
@@ -91,7 +91,7 @@ def yes_for_demo(visitor_id):
         return jsonify({'UnexpectedError': "Unexpected Error occurred'"})
 
 
-@app.route('/start_scheduling/<int:visitor_id>', methods=['POST'])
+@app.route('/start_scheduling/<int:visitor_id>', methods=['PUT'])
 def start_scheduling(visitor_id):
     """Update a record in DB, that visitor started scheduling a demo.
     :param visitor_id: Visitor ID for updating the visitor's "start_scheduling" boolean.
@@ -112,7 +112,7 @@ def start_scheduling(visitor_id):
         return jsonify({'UnexpectedError': "Unexpected Error occurred'"})
 
 
-@app.route('/finish_scheduling/<int:visitor_id>', methods=['POST'])
+@app.route('/finish_scheduling/<int:visitor_id>', methods=['PUT'])
 def finish_scheduling(visitor_id):
     """Update a record in DB, that visitor finished scheduling a demo.
     :param visitor_id: Visitor ID for updating the visitor's "finish_scheduling" boolean.
