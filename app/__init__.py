@@ -1,7 +1,9 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
 from flask_marshmallow import Marshmallow
+from flask_migrate import Migrate
+from flask_sqlalchemy import SQLAlchemy
+
+
 
 app = Flask(__name__)
 
@@ -13,4 +15,4 @@ migrate = Migrate(app, db)
 ma = Marshmallow(app)
 
 
-from . import visitor
+from . import chat_session, visitor

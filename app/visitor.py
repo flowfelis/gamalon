@@ -15,6 +15,7 @@ def add_unique_visitor(visitor_id):
    with unique ID and today's date.
     :param visitor_id: unique ID of the website visitor
     """
+
     visitor = UniqueVisitor(
         visitor_id=visitor_id,
         visit_date=date.today(),
@@ -36,8 +37,9 @@ def add_unique_visitor(visitor_id):
 def get_unique_visitors(date):
     """
     GET Daily visitors- how many unique visitors did the site see on a specific day.
-    :param date: filter by date.
+    :param date: filter by date. Should be in ISO Format.
     """
+
     visitor_count = len(UniqueVisitor.query.filter_by(visit_date=date).all())
     visitors = {'date': date, 'result': visitor_count}
 
