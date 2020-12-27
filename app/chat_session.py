@@ -26,7 +26,7 @@ def add_chat_session(chat_session_id):
         return chat_session_schema.jsonify(chat_session), 201
     except SQLAlchemyError:
         db.session.rollback()
-        return jsonify({'UnexpectedError': "Unexpected Error occurred while trying to insert into 'chat_session table'"})
+        return jsonify({'UnexpectedError': "Unexpected Error occurred'"})
 
 
 @app.route('/chat_sessions/<string:date>')
