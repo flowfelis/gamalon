@@ -1,0 +1,5 @@
+Flask==1.1.2
+ptpython==3.0.7
+psycopg2==2.8.6
+Flask-Migrate==2.5.3
+Flask-SQLAlchemy==2.4.4

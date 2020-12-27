@@ -1,2 +1,4 @@
+.idea/
 .venv
 spec_link.txt
+__pycache__/
