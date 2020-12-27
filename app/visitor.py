@@ -29,7 +29,7 @@ def add_unique_visitor(visitor_id):
     except IntegrityError:
         db.session.rollback()
         return jsonify(
-            {'IntegrityError': "Make sure 'visit_id and visitor_id fields' are unique in 'unique_visitor table'"}), 500
+            {'IntegrityError': "Can not add same visitor on the same day"}), 500
     except SQLAlchemyError:
         db.session.rollback()
         return jsonify({'UnexpectedError': "Unexpected Error occurred'"})
