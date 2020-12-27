@@ -7,6 +7,10 @@ class UniqueVisitor(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     visitor_id = db.Column(db.Integer)
     visit_date = db.Column(db.Date)
+    ask_for_demo = db.Column(db.Boolean, default=False)
+    yes_for_demo = db.Column(db.Boolean, default=False)
+    start_scheduling = db.Column(db.Boolean, default=False)
+    finish_scheduling = db.Column(db.Boolean, default=False)
 
     __table_args__ = (
         db.UniqueConstraint('visitor_id', 'visit_date'),
